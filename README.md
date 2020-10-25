@@ -1,16 +1,41 @@
-# Shop
+# Dynamic E-Commerce App You Can Sell What You Want (I choose as an example dentist tools)
 
-A new Flutter project.
 
-## Getting Started
+## Screen Shots
+<img src="assets/images/Daco_4936345.png">
+## Home Page
+<img src="ss/122807613_341778087123825_2092059293694957343_n.png">
+## Add Items To Cart When Press On it
+<img src="ss/2.png">
+## Determine How Many Of it
+<img src="ss/3.png">
+## Show The Order
+<img src="ss/4.png">
+## Order It
+<img src="ss/5.png">
+## Drawer
+<img src="ss/20.png">
+## Add Items To Sell Or Edit It
+<img src="ss/6.png">
+<img src="ss/7.png">
+<img src="ss/8.png">
+<img src="ss/9.png">
+<img src="ss/10.png">
+<img src="ss/11.png">
+<img src="ss/17.png">
+## Delete The Item
+<img src="ss/21.png">
+## Make Item as Favorite
+<img src="ss/12.png">
+## Show Favorite Only
+<img src="ss/13.png">
+<img src="ss/14.png">
+## Delete The Order By Swiping left
+<img src="ss/22.png">
+## Details Page
+<img src="ss/15.png">
+<img src="ss/16.png">
+<img src="ss/18.png">
+<img src="ss/19.png">
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
