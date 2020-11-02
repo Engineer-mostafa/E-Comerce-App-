@@ -1,8 +1,9 @@
-import 'package:Shop/providers/product.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart.dart';
 import '../screens/product_detail_screen.dart';
+import '../providers/auth.dart';
+import '../providers/product.dart';
 
 class ProductItem extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class _ProductItemState extends State<ProductItem> {
   Widget build(BuildContext context) {
     final productData = Provider.of<Product>(context);
     final cartData = Provider.of<Cart>(context, listen: false);
+    final authData = Provider.of<Auth>(context,listen: false);
     void startAddNewToCart(BuildContext ctx) {
       showModalBottomSheet(
         isScrollControlled: true,
@@ -140,7 +142,7 @@ class _ProductItemState extends State<ProductItem> {
               ),
               color: Theme.of(context).accentColor,
               onPressed: () {
-                product.toggleFavoutie();
+                product.toggleFavoutie(authData.token , authData.userid);
               },
             ),
           ),

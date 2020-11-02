@@ -20,14 +20,17 @@ class OrderItem {
 
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
+  final String authToken;
+  final String userId;
 
+  Orders(this.authToken, this._orders,this.userId);
   List<OrderItem> get orders {
     return [..._orders];
   }
 
-
-Future<void> fetchAndSetOrders() async {
-    const url = 'https://dental-tools.firebaseio.com/orders.json';
+  Future<void> fetchAndSetOrders() async {
+    final url =
+        'https://dental-tools.firebaseio.com/orders/$userId.json?auth=$authToken';
     final response = await http.get(url);
     final List<OrderItem> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -43,11 +46,11 @@ Future<void> fetchAndSetOrders() async {
           products: (orderData['products'] as List<dynamic>)
               .map(
                 (item) => CartItem(
-                      id: item['id'],
-                      price: item['price'],
-                      quantity: item['quantity'],
-                      title: item['title'],
-                    ),
+                  id: item['id'],
+                  price: item['price'],
+                  quantity: item['quantity'],
+                  title: item['title'],
+                ),
               )
               .toList(),
         ),
@@ -57,8 +60,9 @@ Future<void> fetchAndSetOrders() async {
     notifyListeners();
   }
 
- Future<void> addOrder(List<CartItem> cartProducts, double total) async {
-    const url = 'https://dental-tools.firebaseio.com/orders.json';
+  Future<void> addOrder(List<CartItem> cartProducts, double total) async {
+    final url =
+        'https://dental-tools.firebaseio.com/orders/$userId..json?auth=$authToken';
     final timestamp = DateTime.now();
     final response = await http.post(
       url,

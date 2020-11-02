@@ -36,7 +36,10 @@ class Products with ChangeNotifier {
     //   imgUrl: 'assets/images/19.png',
     // ),
   ];
+  final String userToken;
+  final String userId;
 
+  Products(this.userToken, this._items, this.userId);
   List<Product> get items {
     return [..._items];
   }
@@ -50,7 +53,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deletProduct(String id) async {
-    final url = 'https://dental-tools.firebaseio.com/products/$id.json';
+    final url =
+        'https://dental-tools.firebaseio.com/products/$id.json?auth=$userToken';
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);
@@ -66,12 +70,20 @@ class Products with ChangeNotifier {
     existingProduct = null;
   }
 
-  Future<void> fetchAndSetProducts() async {
-    const url = 'https://dental-tools.firebaseio.com/products.json';
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+    var url =
+        'https://dental-tools.firebaseio.com/products.json?auth=$userToken&$filterString';
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       if (extractedData != null) {
+        url =
+            'https://dental-tools.firebaseio.com/userFavorites/$userId.json?auth=$userToken';
+        final favoriteResponse = await http.get(url);
+        final favoriteData = json.decode(favoriteResponse.body);
+        print(favoriteData);
         final List<Product> loadedProducts = [];
         extractedData.forEach((prodId, prodData) {
           loadedProducts.add(Product(
@@ -79,7 +91,8 @@ class Products with ChangeNotifier {
               title: prodData['title'],
               description: prodData['description'],
               price: prodData['price'],
-              isFavourite: prodData['isFavourite'],
+              isFavourite:
+                  favoriteData == null ? false : favoriteData[prodId] ?? false,
               imgUrl: prodData['img'],
               imgFile: File(prodData['imgFile']
                   .toString()
@@ -96,7 +109,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    const url = 'https://dental-tools.firebaseio.com/products.json';
+    final url =
+        'https://dental-tools.firebaseio.com/products.json?auth=$userToken';
     try {
       final respose = await http.post(url,
           body: json.encode({
@@ -104,9 +118,9 @@ class Products with ChangeNotifier {
             'description': product.description,
             'title': product.title,
             'price': product.price,
-            'isFavourite': product.isFavourite,
             'img': product.imgUrl,
-            'imgFile': product.imgFile.toString()
+            'imgFile': product.imgFile.toString(),
+            'creatorId': userId,
           }));
 
       final newProduct = Product(
@@ -128,7 +142,8 @@ class Products with ChangeNotifier {
   Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      final url = 'https://dental-tools.firebaseio.com/products/$id.json';
+      final url =
+          'https://dental-tools.firebaseio.com/products/$id.json?auth=$userToken';
       await http.patch(url,
           body: json.encode({
             'description': newProduct.description,
