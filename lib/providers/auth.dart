@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 class Auth with ChangeNotifier {
   String _token;
-  DateTime _expireDate_Token;
+  DateTime _expireDateToken;
   String _userId;
     Timer _authTimer;
 
@@ -23,8 +23,8 @@ class Auth with ChangeNotifier {
   }
 
   String get token {
-    if (_expireDate_Token != null &&
-        _expireDate_Token.isAfter(DateTime.now()) &&
+    if (_expireDateToken != null &&
+        _expireDateToken.isAfter(DateTime.now()) &&
         _token != null) {
       return _token;
     }
@@ -43,7 +43,7 @@ class Auth with ChangeNotifier {
       String email, String password, String urlSegment) async {
     try {
       final url =
-          'https://identitytoolkit.googleapis.com/v1/accounts:${urlSegment}?key=AIzaSyBk7DUuZsvHokXL2QTmX1X_3I4g58rp8DA';
+          'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyBk7DUuZsvHokXL2QTmX1X_3I4g58rp8DA';
 
       final response = await http.post(url,
           body: json.encode({
@@ -59,14 +59,14 @@ class Auth with ChangeNotifier {
 
       _token = responseData['idToken'];
       _userId = responseData['localId'];
-      _expireDate_Token = DateTime.now()
+      _expireDateToken = DateTime.now()
           .add(Duration(seconds: int.parse(responseData['expiresIn'])));
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode({
         'token': _token,
         'userId': userid,
-        'expiredDate': _expireDate_Token.toIso8601String()
+        'expiredDate': _expireDateToken.toIso8601String()
       });
       prefs.setString('userData', userData);
     } catch (error) {
@@ -77,7 +77,7 @@ class Auth with ChangeNotifier {
   Future<void> logOut() async {
     _token = null;
     _userId = null;
-    _expireDate_Token = null;
+    _expireDateToken = null;
  if (_authTimer != null) {
       _authTimer.cancel();
       _authTimer = null;
@@ -100,7 +100,7 @@ class Auth with ChangeNotifier {
     }
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
-    _expireDate_Token = expiryDate;
+    _expireDateToken = expiryDate;
     notifyListeners();
     return true;
   }
